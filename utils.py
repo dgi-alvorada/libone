@@ -63,6 +63,8 @@ _WS_URL = {
     'producao': {
         'oneManutencaoEQP': 'https://one.svrs.rs.gov.br/ws/oneManutencaoEQP/oneManutencaoEQP.asmx?wsdl',
         'oneRecepcaoLeitura': 'https://one.svrs.rs.gov.br/ws/oneRecepcaoLeitura/oneRecepcaoLeitura.asmx?wsdl',
+        'cmvRecepcaoLeitura': 'https://cmv-ws.sefazrs.rs.gov.br/ws/cmvRecepcaoLeitura/cmvRecepcaoLeitura.asmx?wsdl',
+        'cmvManutencaoEQP': 'https://cmv-ws.sefazrs.rs.gov.br/ws/cmvManutencaoEQP/cmvManutencaoEQP.asmx?wsdl',
     },
 }
 

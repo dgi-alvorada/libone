@@ -159,7 +159,7 @@ class WSClient(object):
         
         self.validate_envelop('oneManutencaoEQP', xml_to_send)
         # If no exception, XML is valid
-        url = utils._WS_URL[self.target]['oneManutencaoEQP']
+        url = utils._WS_URL[self.target]['cmvManutencaoEQP']
         ws = self.connect(url)
         
         #debug
@@ -168,7 +168,7 @@ class WSClient(object):
         #  print(etree.tostring(hist["envelope"], encoding="unicode", pretty_print=True))
 
         #oneDadosMsg
-        result = ws.service.oneManutencaoEQP(xml_to_send)
+        result = ws.service.cmvManutencaoEQP(xml_to_send)
         del ws
 
         # result and xml_to_send is a lxml Element object
@@ -232,7 +232,7 @@ class WSClient(object):
         # If no exception, XML is valid
 
         if (ws == None):
-          url = utils._WS_URL[self.target]['oneRecepcaoLeitura']
+          url = utils._WS_URL[self.target]['cmvRecepcaoLeitura']
           ws = self.connect(url)
 
         #debug
@@ -241,7 +241,7 @@ class WSClient(object):
         #  print(etree.tostring(hist["envelope"], encoding="unicode", pretty_print=True))
 
         #oneDadosMsg
-        result = ws.service.oneRecepcaoLeitura(xml_to_send)
+        result = ws.service.CMVRecepcaoLeitura(xml_to_send)
 
         # result and xml_to_send is a lxml Element object
         return (result, xml_to_send)
