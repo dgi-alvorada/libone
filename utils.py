@@ -15,7 +15,7 @@
 import six
 import tempfile
 import contextlib
-import datetime
+from datetime import datetime
 
 from OpenSSL import crypto
 
@@ -129,7 +129,7 @@ CNPJOper = "CNPJdaPrefeitura"
 cUF = 43
 
 def print_to_log(line):
-  output_date = datetime.datetime.now().strftime("%c: ")
+  output_date = datetime.now().strftime("%c: ")
   f = open(log_file,'at')
   print(output_date + str(line), file = f)
   f.close()

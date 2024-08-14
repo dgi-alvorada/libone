@@ -2,7 +2,8 @@ import onexml
 import oneclient
 import utils
 import glob
-import datetime
+from datetime import datetime
+#import datetime
 import re
 import os
 from multiprocessing import Process
@@ -11,7 +12,7 @@ import time
 from pathlib import Path
 
 #move all to the send folder to clean old ftp files
-output_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+output_date = datetime.now().strftime("%Y%m%d%H%M%S")
 os.system("mkdir " + utils.sent_folder + "/" + str(output_date))
 os.system("mv " + utils.new_folder + "/* " + utils.sent_folder + "/" + str(output_date))
 
@@ -55,13 +56,13 @@ def main():
           m = re.search(r'Hikvision-DS-2CD4A26FWD-IZS-P\/(?P<filename>(?P<id>[0-9]+)_(?P<date_dir>(?P<year>[0-9]{4})(?P<month>[0-9]{2})(?P<day>[0-9]{2})(?P<hour>[0-9]{2})(?P<min>[0-9]{2}))(?P<seg>[0-9]{2})[0-9]{3}_(?P<plate>\w{3,10})\.jpg)$', dir_and_filename)
 
           if (m is None):
-            utils.print_to_log("Error! Bad filename: " + dir_and_filename)
-            m = re.search(r'\/(w+\.jpg)$', dir_and_filename)
+            #utils.print_to_log("Error! Bad filename: " + dir_and_filename)
+            m = re.search(r'\/(\w+\.jpg)$', dir_and_filename)
             if (m is not None):
               now_str = datetime.today().strftime('/%Y/%m/%d/%H/%M')
               #create the new dir if it do not exist
-              os.makedirs(utils.sent_folder + '/bad/'+ now_str, exist_ok=True)
-              move_file_sent_folter(dir_and_filename, '/bad/'+ now_str, m.group(1))
+              os.makedirs(utils.new_folder + '/bad/'+ now_str, exist_ok=True)
+              move_file_sent_folter(dir_and_filename, '/bad/'+ now_str + '/', m.group(1))
             continue;
 
         plate = m.group('plate')
@@ -71,7 +72,7 @@ def main():
         #No date/ntp set generate photo names without the date with '/2000/00/00/00/00'
         #The cam may be rebooting every 10 minutes, DGT used a redundant watchdog on the cam, to disable use htttp://CAM_IP/api/config.cgi?OscOutput=2'
         if (date_dir == '/2000/00/00/00/00/'):
-          mod_timestamp = datetime.datetime.fromtimestamp(os.path.getmtime(dir_and_filename))
+          mod_timestamp = datetime.fromtimestamp(os.path.getmtime(dir_and_filename))
           photoDate = mod_timestamp.strftime("%Y-%m-%dT%H:%M:%S-03:00")
           #debug
           #print(photoDate)
