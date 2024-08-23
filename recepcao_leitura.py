@@ -61,8 +61,8 @@ def main():
             if (m is not None):
               now_str = datetime.today().strftime('/%Y/%m/%d/%H/%M')
               #create the new dir if it do not exist
-              os.makedirs(utils.new_folder + '/bad/'+ now_str, exist_ok=True)
-              move_file_sent_folter(dir_and_filename, '/bad/'+ now_str + '/', m.group(1))
+              os.makedirs(utils.new_folder + '/bad'+ now_str, exist_ok=True)
+              move_file_sent_folter(dir_and_filename, '/bad'+ now_str + '/', m.group(1))
             continue;
 
         plate = m.group('plate')
