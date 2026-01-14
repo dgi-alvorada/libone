@@ -47,23 +47,24 @@ def main():
         #debug
         #print(dir_and_filename)
 
+        #skip old style
         #ftp file name on cam must be configured to /20%2y/%2m/%2d/%2h/%2n/id_%2s_%f_%p
         #id is the cam identifier without the left zeros configured on cam/name.ini file
-        m = re.search(r'(?P<date_dir>\/(?P<year>[0-9]{4})\/(?P<month>[0-9]{2})\/(?P<day>[0-9]{2})\/(?P<hour>[0-9]{2})\/(?P<min>[0-9]{2})\/)(?P<filename>(?P<id>[0-9]+)_(?P<seg>[0-9]{2})_[0-9]+_(?P<plate>\w{7})\.jpg)$', dir_and_filename)
+        #m = re.search(r'(?P<date_dir>\/(?P<year>[0-9]{4})\/(?P<month>[0-9]{2})\/(?P<day>[0-9]{2})\/(?P<hour>[0-9]{2})\/(?P<min>[0-9]{2})\/)(?P<filename>(?P<id>[0-9]+)_(?P<seg>[0-9]{2})_[0-9]+_(?P<plate>\w{7})\.jpg)$', dir_and_filename)
         #skip bad dir_and_filename
-        if (m is None):
-          #Hikvision model DS-2CD4A26FWD-IZS/P using dir name Hikvision-DS-2CD4A26FWD-IZS-P and file name with cam_name + capture_time + plate
-          m = re.search(r'Hikvision-DS-2CD4A26FWD-IZS-P\/(?P<filename>(?P<id>[0-9]+)_(?P<date_dir>(?P<year>[0-9]{4})(?P<month>[0-9]{2})(?P<day>[0-9]{2})(?P<hour>[0-9]{2})(?P<min>[0-9]{2}))(?P<seg>[0-9]{2})[0-9]{3}_(?P<plate>\w{3,10})\.jpg)$', dir_and_filename)
+        #if (m is None):
 
-          if (m is None):
-            #utils.print_to_log("Error! Bad filename: " + dir_and_filename)
-            m = re.search(r'\/(\w+\.jpg)$', dir_and_filename)
-            if (m is not None):
-              now_str = datetime.today().strftime('/%Y/%m/%d/%H/%M')
-              #create the new dir if it do not exist
-              os.makedirs(utils.new_folder + '/bad'+ now_str, exist_ok=True)
-              move_file_sent_folter(dir_and_filename, '/bad'+ now_str + '/', m.group(1))
-            continue;
+        #hikivision models iDS-TCM403-BI and DS-2CD4A26FWD-IZS/P using dir name Hikvision and file name with cam_name + capture_time + plate
+        m = re.search(r'Hikvision\/(?P<filename>(Plate)?(?P<id>[0-9]+)_(?P<date_dir>(?P<year>[0-9]{4})(?P<month>[0-9]{2})(?P<day>[0-9]{2})(?P<hour>[0-9]{2})(?P<min>[0-9]{2}))(?P<seg>[0-9]{2})[0-9]{3}_(?P<plate>\w{3,10})\.jpg)$', dir_and_filename)
+        if (m is None):
+          #utils.print_to_log("Error! Bad filename: " + dir_and_filename)
+          m = re.search(r'\/(\w+\.jpg)$', dir_and_filename)
+          if (m is not None):
+            now_str = datetime.today().strftime('/%Y/%m/%d/%H/%M')
+            #create the new dir if it do not exist
+            os.makedirs(utils.new_folder + '/bad'+ now_str, exist_ok=True)
+            move_file_sent_folter(dir_and_filename, '/bad'+ now_str + '/', m.group(1))
+          continue;
 
         plate = m.group('plate')
         date_dir = m.group('date_dir')
@@ -109,6 +110,11 @@ def main():
 
         #15 digits id
         idEqp = m.group("id").rjust(15,'0')
+
+        # Latest Hikvision model generate file with unknown plates
+        if (plate == 'unknown'):
+          move_file_sent_folter(dir_and_filename, date_dir, filename)
+          continue
 
         result, used_xml = one_ws.oneRecepcaoLeitura(dir_and_filename, idEqp, tsType, photoDate, plate, vehicleType)
 

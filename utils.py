@@ -23,6 +23,9 @@ from enum import Enum
 
 from cryptography.hazmat.primitives import serialization
 
+import os
+from pathlib import Path
+
 __one_version__ = '2.00'
 
 __xsd_versions__ = {
@@ -74,7 +77,7 @@ _TARGET_TPAMB = {
 }
 
 pfx_file = 'cert/.pfx'
-pfx_passw = 'senhadocertificadoA1'
+#usar LoadCredentialEncrypted para carregar a senha do certificado no service do systemd
 ca_file='cert/icp-brasilV10V11.pem'
 
 
@@ -133,6 +136,18 @@ def print_to_log(line):
   f = open(log_file,'at')
   print(output_date + str(line), file = f)
   f.close()
+
+def get_pfx_passw():
+    cred_dir = os.environ.get("CREDENTIALS_DIRECTORY")
+    if cred_dir:
+        passw_path = Path(cred_dir) / "cert_cmv_pass.cred"
+
+        if not passw_path.exists():
+            print_to_log("Erro: Use systemd-creds para configurar a senha no nome cert_cmv_pass.cred")
+
+        return passw_path.read_text().strip()
+
+pfx_passw = get_pfx_passw()
 
 # one use dot for version instead of underline
 def format_xsd_version(str_version):
